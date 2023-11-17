@@ -1,10 +1,12 @@
-import Vue from 'vue'
-import App from './App.vue'
-import store from './store'
+import Vue from "vue";
+import ElementUI from "element-ui";
+import "element-ui/lib/theme-chalk/index.css";
+import App from "./App.vue";
 
-Vue.config.productionTip = false
-
+import { store } from "./store";
+Vue.config.productionTip = false;
+Vue.use(ElementUI);
 new Vue({
   store,
-  render: h => h(App)
-}).$mount('#app')
+  render: (h) => h(App),
+}).$mount("#app");

@@ -1,28 +1,36 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <Layout>
+      <MaterialPanel />
+      <DesignPanel />
+      <SettingPanel />
+    </Layout>
   </div>
 </template>
 
-<script>
-import HelloWorld from './components/HelloWorld.vue'
-
+<script >
+import Layout from "./layouts/index.vue";
+import DesignPanel from "./layouts/DesignPanel/index.vue";
+import MaterialPanel from "./layouts/MaterialPanel/index.vue";
+import SettingPanel from "./layouts/SettingPanel/index.vue";
 export default {
-  name: 'App',
+  name: "App",
   components: {
-    HelloWorld
-  }
-}
+    Layout,
+    DesignPanel,
+    MaterialPanel,
+    SettingPanel,
+  },
+};
 </script>
-
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+html,
+body {
+  margin: 0;
+}
+dl,
+dt,
+dd {
+  margin: 0;
 }
 </style>
