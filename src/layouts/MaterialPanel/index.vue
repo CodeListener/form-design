@@ -40,12 +40,14 @@ export default Vue.extend({
       this.$store.commit("updateIsDargging", false);
     },
     onClone(item) {
-      return JSON.parse(
+      item = JSON.parse(
         JSON.stringify({
           ...item,
           id: Date.now(),
         })
       );
+      this.$store.commit("updateActiveItem", item);
+      return item;
     },
   },
 });

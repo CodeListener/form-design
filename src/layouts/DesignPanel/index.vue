@@ -1,7 +1,7 @@
 <template>
   <div class="design-panel">
-    <draggable class="drawing-wrapper" v-model="drawingList" group="component" @change="change" @start="onStart" @end="onEnd">
-      <RenderItem v-for="item in drawingList" :key="item.id" :item="item" />
+    <draggable class="drawing-wrapper" tag="el-row" v-model="drawingList" group="component" @change="change" @start="onStart" @end="onEnd">
+      <RenderItem v-for="item in drawingList" :key="item.id" :item="item" @click.native.stop="onClick(item)" />
     </draggable>
   </div>
 </template>
@@ -26,6 +26,9 @@ export default {
     },
   },
   methods: {
+    onClick(item) {
+      this.setActiveItem(item);
+    },
     onStart() {
       this.$store.commit("updateIsDargging", true);
     },
@@ -38,7 +41,6 @@ export default {
     onInput(v) {
       const item = this.$store.state.activeItem;
       item.component.props.value = v;
-      // this.$set(this.$store.state.activeItem, item);
       this.$store.commit("updateActiveItem", item);
     },
     change(res) {
@@ -51,8 +53,6 @@ export default {
 };
 </script>
 
-<style lang="less" scoped>
-.drawing-wrapper {
-  height: 100%;
-}
+<style lang="less">
+@import "./index.less";
 </style>

@@ -7,6 +7,7 @@ const BaseComponents = [
       props: {
         type: 'primary',
       },
+      span: 24,
     },
   },
   {
@@ -18,13 +19,14 @@ const BaseComponents = [
     // },
     formItemProps: {
       label: '输入框',
-      labelWidth: '120px',
+      labelWidth: '80px',
     },
     component: {
       tag: 'el-input',
       props: {
         value: undefined,
       },
+      span: 24,
     },
   },
   {
@@ -39,6 +41,7 @@ const BaseComponents = [
       props: {
         value: '',
       },
+      span: 6,
     },
   },
 ]
@@ -54,7 +57,7 @@ const LayoutComponents = [
       props: {},
       style: {
         minHeight: '40px',
-        background: '#efefef',
+        // background: '#efefef',
       },
     },
   },
@@ -66,7 +69,7 @@ const LayoutComponents = [
     component: {
       tag: 'el-row',
       props: {
-        gutter: 20,
+        // gutter: 20,
       },
       style: {
         minHeight: '40px',
@@ -74,22 +77,22 @@ const LayoutComponents = [
       },
     },
   },
-  {
-    name: 'Col布局',
-    icon: '',
-    isLayout: true,
-    children: [],
-    component: {
-      tag: 'el-col',
-      style: {
-        // background: 'tomato',
-        minHeight: '20px',
-      },
-      props: {
-        span: 6,
-      },
-    },
-  },
+  // {
+  //   name: 'Col布局',
+  //   icon: '',
+  //   isLayout: true,
+  //   children: [],
+  //   component: {
+  //     tag: 'el-col',
+  //     style: {
+  //       // background: 'tomato',
+  //       minHeight: '20px',
+  //     },
+  //     props: {
+  //       span: 6,
+  //     },
+  //   },
+  // },
 ]
 export default [
   {
