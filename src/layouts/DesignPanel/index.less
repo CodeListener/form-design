@@ -8,6 +8,11 @@
   .render-item {
     cursor: move;
     position: relative;
+    &:hover {
+      .controls {
+        display: block;
+      }
+    }
   }
   .render-layout-item {
     border: 1px dashed rgb(186, 186, 255);
@@ -17,11 +22,23 @@
     background-color: rgba(248, 248, 248);
   }
   .controls {
-    font-size: 12px;
+    display: none;
+    font-size: 14px;
     border: none;
     position: absolute;
     right: 0;
     top: 0;
+    z-index: 10;
+    i + i {
+      margin-left: 10px;
+    }
+    .move {
+      cursor: move;
+    }
+    .copy,
+    .remove {
+      cursor: pointer;
+    }
   }
   form {
     overflow: hidden;

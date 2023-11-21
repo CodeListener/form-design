@@ -7,7 +7,7 @@ const BaseComponents = [
       props: {
         type: 'primary',
       },
-      span: 24,
+      span: 6,
     },
   },
   {
@@ -26,7 +26,7 @@ const BaseComponents = [
       props: {
         value: undefined,
       },
-      span: 24,
+      span: 6,
     },
   },
   {

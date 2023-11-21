@@ -1,7 +1,7 @@
 <template>
-  <div class="design-panel">
-    <draggable class="drawing-wrapper" tag="el-row" v-model="drawingList" group="component" @change="change" @start="onStart" @end="onEnd">
-      <RenderItem v-for="item in drawingList" :key="item.id" :item="item" @click.native.stop="onClick(item)" />
+  <div :class="['design-panel', { 'is-dragging': $store.state.isDragging }]">
+    <draggable draggable=".render-item" animation="300" class="drawing-wrapper" tag="el-row" v-model="drawingList" group="component" @change="change" @start="onStart" @end="onEnd">
+      <RenderItem v-for="(item, index) in drawingList" :index="index" :key="item.id" :item="item" @click.native.stop="onClick(item)"> </RenderItem>
     </draggable>
   </div>
 </template>
