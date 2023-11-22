@@ -6,21 +6,28 @@
   }
   .render-layout-item,
   .render-item {
+    border: 1px solid transparent;
     cursor: move;
     position: relative;
-    &:hover {
-      .controls {
-        display: block;
-      }
+    &:hover > .controls {
+      display: block;
     }
   }
   .render-layout-item {
     border: 1px dashed rgb(186, 186, 255);
   }
-  .active {
-    // border: 1px dashed rgb(186, 186, 255);
-    background-color: rgba(248, 248, 248);
+  .render-item:not(.render-layout-item):hover > :first-child {
+    background-color: #f6f7ff;
   }
+  // .active {
+  //   box-shadow: 0 0 15px 10px rgb(68, 68, 255);
+  // }
+  // .render-item.active,
+  // .render-item:hover {
+  //   border: 1px dashed #efefef;
+  //   background-color: #f6f7ff;
+  // }
+
   .controls {
     display: none;
     font-size: 14px;

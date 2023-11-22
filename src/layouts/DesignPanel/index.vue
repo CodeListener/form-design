@@ -1,7 +1,7 @@
 <template>
   <div :class="['design-panel', { 'is-dragging': $store.state.isDragging }]">
     <draggable draggable=".render-item" animation="300" class="drawing-wrapper" tag="el-row" v-model="drawingList" group="component" @change="change" @start="onStart" @end="onEnd">
-      <RenderItem v-for="(item, index) in drawingList" :index="index" :key="item.id" :item="item" @click.native.stop="onClick(item)"> </RenderItem>
+      <RenderItem v-for="(item, index) in drawingList" :index="index" :key="item.id" :item="item"> </RenderItem>
     </draggable>
   </div>
 </template>
@@ -26,18 +26,18 @@ export default {
     },
   },
   methods: {
-    onClick(item) {
-      this.setActiveItem(item);
-    },
+    // onClick(item) {
+    //   this.setActiveItem(item);
+    // },
     onStart() {
       this.$store.commit("updateIsDargging", true);
     },
     onEnd() {
       this.$store.commit("updateIsDargging", false);
     },
-    setActiveItem(item) {
-      this.$store.commit("updateActiveItem", item);
-    },
+    // setActiveItem(item) {
+    //   this.$store.commit("updateActiveItem", item);
+    // },
     onInput(v) {
       const item = this.$store.state.activeItem;
       item.component.props.value = v;

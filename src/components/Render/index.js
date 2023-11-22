@@ -1,10 +1,8 @@
 import draggable from 'vuedraggable'
-
 function renderControl(h, item) {
   const { remove, copy } = genControlMethods.call(this, item)
   return (
     <div class="controls">
-      {item.id}
       <i
         class="el-icon-aim move"
         onClick={(e) => {
@@ -75,19 +73,45 @@ function renderLayoutItem(h, item) {
   return layout
 }
 
+function injectSlot(h, slotName, item) {
+  return h(item, { slot: slotName })
+}
 function renderChildItem(h, item) {
   const { component, formItemProps } = item
-  const { style = {}, props = {}, tag } = component
-  let _item = h(tag, {
-    style,
-    props,
-    nativeOn: {
-      click: (e) => {
-        this.$store.commit('updateActiveItem', item)
-        e.stopPropagation()
+  const { style = {}, props = {}, tag, slots = {} } = component
+  let _slots = {}
+  const _scodepSlots = {}
+  // 收集具名插槽及其作用域插槽
+  Object.keys(slots).forEach((key) => {
+    const target = slots[key]
+    if (!(target instanceof Function)) {
+      _slots[key] = target
+    } else {
+      _slots[key] = target.call(this, item)
+      _scodepSlots[key] = target.bind(this, item)
+    }
+  })
+
+  _slots = Object.keys(_slots).reduce((prev, slotKey) => {
+    return [...prev, injectSlot(h, slotKey, _slots[slotKey])]
+  }, [])
+
+  let _item = h(
+    tag,
+    {
+      style,
+      props,
+      scopedSlots: _scodepSlots,
+      // 这里需要容错下，tag为原生标签使用on
+      nativeOn: {
+        click: (e) => {
+          this.$store.commit('updateActiveItem', item)
+          e.stopPropagation()
+        },
       },
     },
-  })
+    _slots,
+  )
   if (this.isForm) {
     return h(
       'el-form-item',
@@ -133,6 +157,10 @@ export default {
       return [...this.parentPaths, this.index]
     },
   },
+  mounted() {
+    // 挂载之后设置为当前的激活目标
+    this.$store.commit('updateActiveItem', this.item)
+  },
   render(h) {
     const { item } = this
     const { isLayout } = item
@@ -141,7 +169,10 @@ export default {
       if (isLayout) {
         arr.push('render-layout-item')
       }
-      if (this.$store.state.activeItem.id === item.id) {
+      if (
+        this.$store.state.activeItem &&
+        this.$store.state.activeItem.id === item.id
+      ) {
         arr.push('active')
       }
       return arr
