@@ -7,7 +7,7 @@ function renderControl(h, item) {
         class="el-icon-aim move"
         onClick={(e) => {
           e.stopPropagation()
-          this.$store.commit('updateActiveItem', item)
+          this.$store.commit('setActiveItemPaths', this.paths)
         }}
       />
       <i
@@ -40,11 +40,11 @@ function genControlMethods(_item) {
 function renderLayoutItem(h, item) {
   const { children = [], component } = item
   const { style = {}, props = {}, tag } = component
-
   const childs = children.map((child, index) => {
     return h('RenderItem', {
+      key: child.id,
       props: {
-        index,
+        paths: [...this.paths, index],
         item: child,
       },
       scopedSlots: {
@@ -91,7 +91,7 @@ function renderChildItem(h, item) {
       _scodepSlots[key] = target.bind(this, item)
     }
   })
-
+  // 设置具名插槽
   _slots = Object.keys(_slots).reduce((prev, slotKey) => {
     return [...prev, injectSlot(h, slotKey, _slots[slotKey])]
   }, [])
@@ -101,11 +101,12 @@ function renderChildItem(h, item) {
     {
       style,
       props,
+      // 设置作用于插槽
       scopedSlots: _scodepSlots,
       // 这里需要容错下，tag为原生标签使用on
       nativeOn: {
         click: (e) => {
-          this.$store.commit('updateActiveItem', item)
+          this.$store.commit('setActiveItemPaths', this.paths)
           e.stopPropagation()
         },
       },
@@ -127,39 +128,29 @@ function renderChildItem(h, item) {
 export default {
   name: 'RenderItem',
   props: {
+    paths: {
+      type: Array,
+      required: true,
+    },
     item: {
       type: Object,
       required: true,
-    },
-    index: {
-      required: true,
-      type: Number,
     },
   },
   components: {
     draggable,
   },
-  data() {
-    return {}
-  },
   inject: {
-    parentPaths: { default: () => [] },
     isForm: { default: false },
   },
   provide() {
     return {
-      parentPaths: this.paths,
       isForm: this.isForm || !!this.item.isForm,
     }
   },
-  computed: {
-    paths() {
-      return [...this.parentPaths, this.index]
-    },
-  },
   mounted() {
     // 挂载之后设置为当前的激活目标
-    this.$store.commit('updateActiveItem', this.item)
+    this.$store.commit('setActiveItemPaths', this.paths)
   },
   render(h) {
     const { item } = this
@@ -182,7 +173,7 @@ export default {
         span={item.component.span}
         class={classList(item)}
         nativeOnClick={(e) => {
-          this.$store.commit('updateActiveItem', item)
+          this.$store.commit('setActiveItemPaths', this.paths)
           e.stopPropagation()
         }}
       >

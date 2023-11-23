@@ -12,7 +12,6 @@ function findParentFromPaths(list, paths = []) {
   do {
     path = parentPaths.shift()
     parent = parent[path]
-    console.log(parent)
     if (parent && parent.children) {
       parent = parent.children
     } else {
@@ -24,9 +23,17 @@ function findParentFromPaths(list, paths = []) {
 export const store = new Vuex.Store({
   state: {
     isDragging: false,
-    activeItem: {},
     drawingList: [],
     materialComponent: materials,
+    activeItemPaths: undefined,
+  },
+  getters: {
+    activeItem(state) {
+      const { drawingList, activeItemPaths = [] } = state
+      const parent = findParentFromPaths(drawingList, activeItemPaths)
+      const targetIdx = activeItemPaths[activeItemPaths.length - 1]
+      return parent[targetIdx]
+    },
   },
   mutations: {
     updateIsDargging(state, flag) {
@@ -35,8 +42,8 @@ export const store = new Vuex.Store({
     updateDrawingList(state, item) {
       state.drawingList = item
     },
-    updateActiveItem(state, item) {
-      state.activeItem = item
+    setActiveItemPaths(state, paths) {
+      state.activeItemPaths = paths
     },
   },
   actions: {
@@ -47,7 +54,7 @@ export const store = new Vuex.Store({
       if (parent) {
         const target = parent.splice(targetIdx, 1)
         console.warn('移除目标', target[0])
-        context.commit('updateActiveItem', undefined)
+        context.commit('setActiveItemPaths', undefined)
       }
     },
     copyDrawingItem(context, paths) {
@@ -59,9 +66,11 @@ export const store = new Vuex.Store({
         newItem.id = Date.now()
         parent.push(newItem)
         console.warn('复制目标', newItem)
-        context.commit('updateActiveItem', newItem)
+        context.commit('setActiveItemPaths', [
+          ...paths.slice(0, paths.length - 1),
+          targetIdx + 1,
+        ])
       }
     },
   },
-  getters: {},
 })

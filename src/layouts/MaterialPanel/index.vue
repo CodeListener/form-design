@@ -48,7 +48,6 @@ export default Vue.extend({
         ...item,
         id: Date.now(),
       });
-      // this.$store.commit("updateActiveItem", item);
       return item;
     },
   },
