@@ -31,6 +31,7 @@ export const store = new Vuex.Store({
     activeItem(state) {
       const { drawingList, activeItemPaths = [] } = state
       const parent = findParentFromPaths(drawingList, activeItemPaths)
+      if (!parent) return
       const targetIdx = activeItemPaths[activeItemPaths.length - 1]
       return parent[targetIdx]
     },

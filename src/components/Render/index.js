@@ -53,6 +53,7 @@ function renderLayoutItem(h, item) {
       },
     })
   })
+
   const layout = (
     <draggable
       draggable=".render-item"
@@ -161,8 +162,8 @@ export default {
         arr.push('render-layout-item')
       }
       if (
-        this.$store.state.activeItem &&
-        this.$store.state.activeItem.id === item.id
+        this.$store.getters.activeItem &&
+        this.$store.getters.activeItem.id === item.id
       ) {
         arr.push('active')
       }
@@ -172,20 +173,21 @@ export default {
       <el-col
         span={item.component.span}
         class={classList(item)}
-        nativeOnClick={(e) => {
+      >
+        <div class="render-content" onClick={(e) => {
           this.$store.commit('setActiveItemPaths', this.paths)
           e.stopPropagation()
-        }}
-      >
-        {isLayout
-          ? renderLayoutItem.call(this, h, item)
-          : renderChildItem.call(this, h, item)}
-        {this.$scopedSlots.controls
-          ? this.$scopedSlots.controls({
-              item,
-              ...genControlMethods.call(this, item),
-            })
-          : renderControl.call(this, h, item)}
+        }}>
+          {isLayout
+            ? renderLayoutItem.call(this, h, item)
+            : renderChildItem.call(this, h, item)}
+          {this.$scopedSlots.controls
+            ? this.$scopedSlots.controls({
+                item,
+                ...genControlMethods.call(this, item),
+              })
+            : renderControl.call(this, h, item)}
+        </div>
       </el-col>
     )
   },
