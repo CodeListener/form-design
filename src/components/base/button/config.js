@@ -14,4 +14,17 @@ export const config = {
       },
     },
   },
+  settings: [
+    {
+      title: '块设置',
+      list: [
+        {
+          label: 'span',
+          componentName: 'el-slider',
+          componentProps: { min: 0, max: 24 },
+          fieldPaths: 'component.span',
+        },
+      ],
+    },
+  ],
 }

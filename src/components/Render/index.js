@@ -1,15 +1,19 @@
 import draggable from 'vuedraggable'
 function renderControl(h, item) {
   const { remove, copy } = genControlMethods.call(this, item)
+  const style = {}
+  if (this.active !== item) {
+    style.display = 'none'
+  }
   return (
-    <div class="controls">
-      <i
+    <div class="controls" style={style}>
+      {/* <i
         class="el-icon-aim move"
         onClick={(e) => {
           e.stopPropagation()
-          this.$store.commit('setActiveItemPaths', this.paths)
+          this.$emit('active', item)
         }}
-      />
+      /> */}
       <i
         class="el-icon-document-copy copy"
         style={{ color: 'blue' }}
@@ -23,14 +27,15 @@ function renderControl(h, item) {
     </div>
   )
 }
-function genControlMethods(_item) {
+function genControlMethods(item) {
   const remove = (e) => {
     e.stopPropagation()
-    this.$store.dispatch('removeDrawingItem', this.paths)
+    this.$emit('remove', this.list, item)
   }
   const copy = (e) => {
+    this.$emit('copy', this.list, item)
+
     e.stopPropagation()
-    this.$store.dispatch('copyDrawingItem', this.paths)
   }
   return {
     remove,
@@ -40,13 +45,15 @@ function genControlMethods(_item) {
 function renderLayoutItem(h, item) {
   const { children = [], component } = item
   const { style = {}, props = {}, tag } = component
-  const childs = children.map((child, index) => {
+  const childs = children.map((child) => {
     return h('RenderItem', {
       key: child.id,
       props: {
-        paths: [...this.paths, index],
+        list: children,
         item: child,
+        active: this.active,
       },
+      on: this.$listeners,
       scopedSlots: {
         /* 支持自定义控制按钮 */
         controls: this.$scopedSlots.controls,
@@ -65,8 +72,8 @@ function renderLayoutItem(h, item) {
       style={style}
       list={item.children}
       group="component"
-      onStart={() => this.$store.commit('updateIsDargging', true)}
-      onEnd={() => this.$store.commit('updateIsDargging', false)}
+      onStart={this.$listeners.dragStart}
+      onEnd={this.$listeners.dragEnd}
     >
       {childs}
     </draggable>
@@ -107,7 +114,7 @@ function renderChildItem(h, item) {
       // 这里需要容错下，tag为原生标签使用on
       nativeOn: {
         click: (e) => {
-          this.$store.commit('setActiveItemPaths', this.paths)
+          this.$emit('active', item)
           e.stopPropagation()
         },
       },
@@ -129,9 +136,13 @@ function renderChildItem(h, item) {
 export default {
   name: 'RenderItem',
   props: {
-    paths: {
+    active: {
+      type: Object,
+      default: () => undefined,
+    },
+    list: {
       type: Array,
-      required: true,
+      default: () => [],
     },
     item: {
       type: Object,
@@ -151,7 +162,7 @@ export default {
   },
   mounted() {
     // 挂载之后设置为当前的激活目标
-    this.$store.commit('setActiveItemPaths', this.paths)
+    this.$emit('active', this.item)
   },
   render(h) {
     const { item } = this
@@ -161,23 +172,20 @@ export default {
       if (isLayout) {
         arr.push('render-layout-item')
       }
-      if (
-        this.$store.getters.activeItem &&
-        this.$store.getters.activeItem.id === item.id
-      ) {
+      if (this.active && this.active.id === item.id) {
         arr.push('active')
       }
       return arr
     }
     return (
-      <el-col
-        span={item.component.span}
-        class={classList(item)}
-      >
-        <div class="render-content" onClick={(e) => {
-          this.$store.commit('setActiveItemPaths', this.paths)
-          e.stopPropagation()
-        }}>
+      <el-col span={item.component.span} class={classList(item)}>
+        <div
+          class="render-content"
+          onClick={(e) => {
+            this.$emit('active', item)
+            e.stopPropagation()
+          }}
+        >
           {isLayout
             ? renderLayoutItem.call(this, h, item)
             : renderChildItem.call(this, h, item)}
