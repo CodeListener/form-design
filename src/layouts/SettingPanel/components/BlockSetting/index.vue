@@ -2,7 +2,13 @@
   <el-row class="block-setting" :gutter="10">
     <el-col :span="item.span" v-for="(item, index) in schema.list" :key="index">
       <el-form-item :label="item.label" :label-width="item.labelWidth || '80px'">
-        <component :is="item.component.tag" v-bind="item.component.props" :value="getValueFromPath(item.fieldPaths)" @[getModelEvent(item)]="onInput($event, item.fieldPaths)" />
+        <component
+          :is="item.component.tag"
+          v-bind="item.component.props"
+          :config="config"
+          :value="getValueFromPath(item.fieldPaths)"
+          @[getModelEvent(item)]="onInput($event, item.fieldPaths)"
+        />
       </el-form-item>
     </el-col>
   </el-row>

@@ -103,12 +103,13 @@ function renderChildItem(h, item) {
   _slots = Object.keys(_slots).reduce((prev, slotKey) => {
     return [...prev, injectSlot(h, slotKey, _slots[slotKey])]
   }, [])
-
   let _item = h(
     tag,
     {
       style,
       props,
+      // 可能一些组件不存在prop定义，则把它一并存入attrs支持透传
+      attrs: {...props},
       // 设置作用于插槽
       scopedSlots: _scodepSlots,
       // 这里需要容错下，tag为原生标签使用on
