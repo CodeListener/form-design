@@ -1,3 +1,5 @@
+import { withBaseBlockSetting } from '@/components/utils/setting'
+
 export const config = {
   name: 'Alert 警告',
   icon: '',
@@ -9,4 +11,5 @@ export const config = {
     },
     span: 24,
   },
+  settings: [withBaseBlockSetting()],
 }

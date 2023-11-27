@@ -1,13 +1,16 @@
 <template>
-  <el-form class="form-setting">
-    <h6>{{ schema.title }}</h6>
-    <el-form-item v-for="item in schema.list" :label="item.label" label-width="80px">
-      <component :is="item.componentName" v-bind="item.componentProps" :value="getValueFromPath(item.fieldPaths)" @input="onInput($event, item.fieldPaths)" />
-    </el-form-item>
-  </el-form>
+  <el-row class="block-setting" :gutter="10">
+    <el-col :span="item.span" v-for="(item, index) in schema.list" :key="index">
+      <el-form-item :label="item.label" :label-width="item.labelWidth || '80px'">
+        <component :is="item.component.tag" v-bind="item.component.props" :value="getValueFromPath(item.fieldPaths)" @[getModelEvent(item)]="onInput($event, item.fieldPaths)" />
+      </el-form-item>
+    </el-col>
+  </el-row>
 </template>
 
 <script>
+import { deepClone } from "@/utils";
+
 export default {
   props: {
     config: Object,
@@ -16,7 +19,11 @@ export default {
       required: true,
     },
   },
+  computed: {},
   methods: {
+    getModelEvent(item) {
+      return item.modelEvent || "input";
+    },
     getValueFromPath(fieldPaths) {
       const paths = fieldPaths.split(".");
       const target = paths.reduce((prev, path) => {
@@ -33,7 +40,10 @@ export default {
     },
     onInput(v, fieldPaths) {
       const [key] = fieldPaths.split(".").slice(-1);
-      this.$set(this.findParent(fieldPaths), key, v);
+      const parent = this.findParent(fieldPaths);
+      parent[key] = v;
+      this.$store.commit("updateActiveItem", deepClone(this.config));
+      // Vue.set(this.findParent(fieldPaths), key, v);
     },
   },
 };

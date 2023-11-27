@@ -1,3 +1,5 @@
+import { withBaseBlockSetting } from "@/components/utils/setting";
+
 export const config = {
   name: 'Form表单',
   icon: '',
@@ -11,4 +13,5 @@ export const config = {
       minHeight: '40px',
     },
   },
+  settings: [withBaseBlockSetting()],
 }

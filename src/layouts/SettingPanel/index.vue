@@ -1,16 +1,13 @@
 <template>
   <div class="setting-panel">
     <div class="not-setting" v-if="!activeItem">暂无设置目标</div>
-    <div class="settting-form" v-else>
-      <template v-for="settingItem in activeItem.settings || []">
-        <BlockSetting :schema="settingItem" :config="activeItem" />
-      </template>
-      <!-- <h2>Row</h2>
-      <div>span</div>
-      <el-slider v-model="activeItem.component.span" :min="0" :max="24" :step="1" show-stops> </el-slider>
-      <div>gutter</div>
-      <el-slider v-if="activeItem.component.tag === 'el-row'" v-model="activeItem.component.props.gutter" :min="0" :max="24" :step="1" show-stops> </el-slider> -->
-    </div>
+    <el-form size="mini" class="settting-form" label-position="left" v-else>
+      <el-collapse v-model="selected" ccordion>
+        <el-collapse-item :name="settingItem.title" v-for="(settingItem, index) in activeItem.settings || []" :title="settingItem.title" :key="index">
+          <BlockSetting :schema="settingItem" :config="activeItem" />
+        </el-collapse-item>
+      </el-collapse>
+    </el-form>
   </div>
 </template>
 
@@ -21,6 +18,11 @@ export default {
   name: "SettingPanel",
   components: {
     BlockSetting,
+  },
+  data() {
+    return {
+      selected: [],
+    };
   },
   computed: {
     activeItem() {

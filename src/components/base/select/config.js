@@ -1,3 +1,5 @@
+import { withBaseBlockSetting } from "@/components/utils/setting";
+
 export const config = {
   name: '选择框',
   icon: '',
@@ -8,4 +10,5 @@ export const config = {
     },
     span: 6,
   },
+  settings: [withBaseBlockSetting()],
 }

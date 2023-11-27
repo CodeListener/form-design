@@ -21,6 +21,9 @@ export const store = new Vuex.Store({
     updateDrawingList(state, item) {
       state.drawingList = item
     },
+    updateActiveItem(state, item) {
+      Object.assign(state.active, item)
+    },
   },
   actions: {},
 })
